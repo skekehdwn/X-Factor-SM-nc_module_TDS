@@ -1,0 +1,108 @@
+{
+  "PROJECT" : {
+    "CUSTOMER" : "X-FACTOR",
+    "TYPE" : "System",
+    "LOG" : {
+      "directory" : "log/",
+      "fileName" : "log_",
+      "fileFormat" : ".log"
+    },
+    "PROGRESSBAR" : "False",
+    "TEST" : {
+      "DAILY" : "false"
+    },
+    "MAIL": {
+      "ID": "djlee@xionits.com",
+      "PW": "password!"
+    }
+  },
+  "CORE" : {
+    "Tanium" : {
+      "COREUSE" : "true",
+      "ONOFFTYPE" : "online",
+      "PROJECT" :{
+          "VUL" : {
+            "USE": "false"
+          }
+      },
+      "CYCLE" : {
+        "MINUTELY": {
+          "USE": "true",
+          "TIME": 300
+        },
+        "DAILY": {
+          "USE": "true",
+          "TIME": {
+            "hour": "12",
+            "minute": "41"
+          }
+        }
+      },
+      "INPUT" : {
+        "API" : {
+          "URL": "https://211.38.3.194:4082",
+          "PATH": {
+            "SessionKey": "/api/v2/session/login",
+            "Sensor": "/api/v2/result_data/saved_question/",
+            "Connect": "/plugin/products/connect/v1/connections/"
+          },
+          "username": "administrator",
+          "password": "xion123!",
+          "SensorID": {
+            "COMMON" : "1837",
+            "SERVICE": "1418",
+            "SECURITY": "1300",
+            "PURCHASE": "1299",
+            "DAILY" : "1679"
+          }
+        },
+        "DB" : {
+          "PS" : {
+            "HOST": "localhost",
+            "PORT": "5432",
+            "NAME": "ncsm",
+            "USER": "postgres",
+            "PWD": "psql",
+            "TNM": {
+              "MA" : "minutely_asset",
+              "DA": "daily_asset",
+              "MSL" : "minutely_statistics_list",
+              "DSL" : "daily_statistics_list",
+              "MS" : "minutely_statistics",
+              "DS" : "daily_statistics",
+              "IE" : "idle_asset",
+              "SL" : "sbom_list"
+            }
+          }
+        }
+      },
+      "OUTPUT" : {
+        "DB" : {
+          "PS" : {
+            "HOST": "localhost",
+            "PORT": "5432",
+            "NAME": "ncsm",
+            "USER": "postgres",
+            "PWD": "psql",
+            "TNM": {
+              "MA" : "minutely_asset",
+              "DA": "daily_asset",
+              "MSL" : "minutely_statistics_list",
+              "DSL" : "daily_statistics_list",
+              "MS" : "minutely_statistics",
+              "DS" : "daily_statistics",
+              "VQ" : "vulnerability_list",
+              "VJ" : "vulnerability_judge",
+              "IE" : "idle_asset",
+              "CRT": "certificate_asset",
+              "SL" : "sbom_list"
+            }
+          }
+        }
+      }
+    },
+    "Zabbix" : {
+
+    }
+  }
+}

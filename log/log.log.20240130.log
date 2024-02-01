@@ -1,0 +1,57 @@
+WARNING, 2024-01-30 09:21:04,408, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32204, chassis_type, Notebook, 29, null)
+
+WARNING, 2024-01-30 09:21:04,410, Daily errorNotebook
+WARNING, 2024-01-30 09:25:03,645, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32211, chassis_type, Notebook, 29, null)
+
+WARNING, 2024-01-30 09:25:03,645, Daily errorNotebook
+WARNING, 2024-01-30 09:32:41,310, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32367, chassis_type, Notebook, 29, null)
+
+WARNING, 2024-01-30 09:32:41,310, Daily errorNotebook
+WARNING, 2024-01-30 09:42:37,606, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32374, chassis_type, Notebook, 29, null)
+
+WARNING, 2024-01-30 09:42:37,606, Daily errorNotebook
+WARNING, 2024-01-30 09:49:37,631, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32459, chassis_type, Notebook, 30, null)
+
+WARNING, 2024-01-30 09:49:37,631, Daily errorNotebook
+WARNING, 2024-01-30 09:50:50,419, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32466, chassis_type, Notebook, 30, null)
+
+WARNING, 2024-01-30 09:50:50,420, Daily errorNotebook
+WARNING, 2024-01-30 09:53:48,755, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32473, chassis_type, Notebook, 30, null)
+
+WARNING, 2024-01-30 09:53:48,756, Daily errorNotebook
+WARNING, 2024-01-30 10:01:04,552, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (32480, chassis_type, Desktop, 34, null)
+
+WARNING, 2024-01-30 10:01:04,552, Daily errorDesktop
+WARNING, 2024-01-30 16:03:31,470, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-30 16:03:31,486, Sensor ID : 1837
+WARNING, 2024-01-30 16:03:31,486, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-30 16:03:31,486, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-30 16:03:31,486, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-30 16:04:56,942, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-30 16:04:56,942, Sensor ID : 1837
+WARNING, 2024-01-30 16:04:56,942, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-30 16:04:56,942, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-30 16:04:56,958, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-30 16:10:03,182, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-30 16:10:03,182, Sensor ID : 1837
+WARNING, 2024-01-30 16:10:03,182, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-30 16:10:03,182, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-30 16:10:03,182, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-30 16:24:38,604, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-30 16:24:38,604, Sensor ID : 1837
+WARNING, 2024-01-30 16:24:38,604, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-30 16:24:38,604, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-30 16:24:38,604, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-30 16:25:41,082, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-30 16:25:41,082, Sensor ID : 1837
+WARNING, 2024-01-30 16:25:41,082, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-30 16:25:41,082, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-30 16:25:41,082, 정시 미닛틀리 error'NoneType' object is not iterable

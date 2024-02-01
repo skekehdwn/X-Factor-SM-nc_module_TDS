@@ -1,0 +1,4 @@
+WARNING, 2024-01-29 17:34:42,609, Daily error오류:  "statistics_collection_date" 칼럼(해당 릴레이션 "common_daily_statistics_log")의 null 값이 not null 제약조건을 위반했습니다.
+DETAIL:  실패한 자료: (31797, chassis_type, Desktop, 35, null)
+
+WARNING, 2024-01-29 17:34:42,609, Daily errorDesktop

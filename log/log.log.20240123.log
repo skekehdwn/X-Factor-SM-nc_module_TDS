@@ -1,0 +1,22 @@
+WARNING, 2024-01-23 05:24:48,970, 정시 미닛틀리 errorlist index out of range
+WARNING, 2024-01-23 05:26:57,001, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-23 05:26:57,001, Sensor ID : 1837
+WARNING, 2024-01-23 05:26:57,002, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-23 05:26:57,002, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-23 05:26:57,003, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-23 05:28:03,148, 정시 미닛틀리 errorlist index out of range
+WARNING, 2024-01-23 05:43:56,676, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-23 05:43:56,677, Sensor ID : 1837
+WARNING, 2024-01-23 05:43:56,678, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-23 05:43:56,678, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-23 05:43:56,679, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-23 05:44:15,416, 정시 미닛틀리 errorlist index out of range
+WARNING, 2024-01-23 05:44:53,578, 정시 미닛틀리 errorlist index out of range
+WARNING, 2024-01-23 05:46:31,938, 정시 미닛틀리 errorlist index out of range
+WARNING, 2024-01-23 05:53:00,268, 정시 미닛틀리 errorlist index out of range
+WARNING, 2024-01-23 08:02:01,697, 정시 미닛틀리 errorstrptime() argument 1 must be str, not list
+WARNING, 2024-01-23 08:02:31,526, 정시 미닛틀리 errorunconverted data remains: Z
+WARNING, 2024-01-23 08:02:58,617, 정시 미닛틀리 errorunconverted data remains: Z
+WARNING, 2024-01-23 08:03:12,016, 정시 미닛틀리 errorunconverted data remains: Z
+WARNING, 2024-01-23 17:16:12,439, 정시 미닛틀리 errorcould not translate host name "1localhost" to address: Unknown host
+

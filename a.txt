@@ -1,0 +1,27 @@
+{'hot_module': 90, 'discover_module': 150, 'ver_module': 19044, 'hot_web': 90, 'discover_web': 150, 'ver_web': 19044}
+중복된 아이템 'hot_module'를 count 값 90로 추가하였습니다.
+중복된 아이템 'discover_module'를 count 값 150로 추가하였습니다.
+중복된 아이템 'ver_module'를 count 값 19044로 추가하였습니다.
+중복된 아이템 'hot_web'를 count 값 90로 추가하였습니다.
+중복된 아이템 'discover_web'를 count 값 150로 추가하였습니다.
+중복된 아이템 'ver_web'를 count 값 19044로 추가하였습니다.
+'NoneType' object is not iterable
+cache success
+Minutely Statistics Success
+os simple시작
+대역별 시작
+보안패치 시작
+미관리 시작
+오피스 시작
+CPU 시작
+os 6개 시작
+업데이트 핫픽스 시작
+구분값  시작
+필수보안프로그렘  시작
+daily Statistics Success
+item 'hot_web'의 값이 ver_module 값으로 업데이트되었습니다.
+item 'hot_web'의 값이 hot_module의 값으로 업데이트되었습니다.
+item 'hot_web'의 값이 discover_module 값으로 업데이트되었습니다.
+Tanium Minutely common 성공
+스케쥴링을 시작하겠습니다.
+...........3...........2...........1common is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\common is running....|common is running..../common is running....ㅡcommon is running....\

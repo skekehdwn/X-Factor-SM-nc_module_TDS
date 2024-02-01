@@ -1,0 +1,10 @@
+WARNING, 2024-01-31 11:26:43,668, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-31 11:26:43,668, Sensor ID : 1837
+WARNING, 2024-01-31 11:26:43,668, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-31 11:26:43,668, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-31 11:26:43,673, 정시 미닛틀리 error'NoneType' object is not iterable
+WARNING, 2024-01-31 11:27:31,988, Tanium API Sensor 호출 Error 발생
+WARNING, 2024-01-31 11:27:31,988, Sensor ID : 1837
+WARNING, 2024-01-31 11:27:31,988, Preprocessing_Dashboard.py - Error 발생
+WARNING, 2024-01-31 11:27:31,988, Error : 'NoneType' object is not iterable
+WARNING, 2024-01-31 11:27:31,993, 정시 미닛틀리 error'NoneType' object is not iterable
