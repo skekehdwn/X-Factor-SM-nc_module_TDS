@@ -396,7 +396,8 @@ def Daily_statistics() :
         local_tz = pytz.timezone('Asia/Seoul')
         utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
         now = utc_now.astimezone(local_tz)
-        start_of_today = now.replace(minute=0, second=0, microsecond=0)
+        start_of_today = now.replace(minute=0, second=0, microsecond=0) - timedelta(minutes=20)
+        print(start_of_today)
         seven_days_ago = start_of_today - timedelta(days=7)
         # end_of_today = start_of_today + timedelta(days=1)
 
