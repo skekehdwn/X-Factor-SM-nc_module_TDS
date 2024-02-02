@@ -17,6 +17,7 @@ import pytz
 from datetime import datetime, timedelta
 logger = logging.getLogger()
 def plug_in_minutely(data):
+    a = 0
     try:
         #print(data)
         # Xfactor_Service.objects.all().delete()
@@ -55,7 +56,6 @@ def plug_in_minutely(data):
             # 현재 시간대로 시간 변환
             now = utc_now.astimezone(local_tz)
             index_now = now.strftime('%Y-%m-%d-%H')
-
             computer_id = ''
             tds_computer_id = d[0][0]['text']
             node_computer_id = d[-2][0]['text']
@@ -74,8 +74,10 @@ def plug_in_minutely(data):
             elif not last_registration_time not in ['[no results]', '', 'unconfirmed']:
                 new_user_date_str = last_registration_time + 'Z'
             else:
+                a += 1
                 continue
-
+            print(a)
+            # print(last_seen_data, last_registration_time)
             new_user_date = datetime.strptime(new_user_date_str, '%Y-%m-%dT%H:%M:%SZ')
             new_user_date = new_user_date.astimezone(local_tz) + timedelta(hours=9)
             new_user_date_index_now = new_user_date.strftime('%Y-%m-%d-%H')
