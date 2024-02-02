@@ -1,7 +1,6 @@
 import psycopg2
 import openpyxl
 from openpyxl import load_workbook
-import schedule
 import time
 from datetime import datetime, timedelta
 
