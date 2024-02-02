@@ -75,8 +75,9 @@ def plug_in_minutely(data):
                 new_user_date_str = last_registration_time + 'Z'
             else:
                 a += 1
+                print(a)
                 continue
-            print(a)
+            #print(a)
             # print(last_seen_data, last_registration_time)
             new_user_date = datetime.strptime(new_user_date_str, '%Y-%m-%dT%H:%M:%SZ')
             new_user_date = new_user_date.astimezone(local_tz) + timedelta(hours=9)
