@@ -4,6 +4,7 @@ from common.core.Dashboard import daily_plug_in as CTDPI
 from common.core.Dashboard import minutely_plug_in as CTMPI
 from common.core.Dashboard import discover_plug_in as DCPI
 from common.core.Kafka import Kafka_Con, save_to_postgresql
+from common.core.dataCollection import job
 from common.etc.thread import count as count
 import urllib3
 import threading
@@ -74,7 +75,8 @@ def discover():
 
 def main():
     try :
-        CTMPI()
+        job()
+        #CTMPI()
         #CTDPI()
         #DCPI()
         # Kafka_Con()
@@ -115,7 +117,8 @@ def main():
     sched.add_job(minutely, 'cron', hour='0-23', minute='03', second='10', misfire_grace_time=None)  # seconds='3'
     #sched.add_job(daily, 'cron', hour='0-23', minute='10',  second='20', misfire_grace_time=None)
     #sched.add_job(kafka, 'cron', hour='16', minute='30',  second='20' , misfire_grace_time=None)
-    sched.add_job(discover, 'cron', hour=10, minute=30, second=0, misfire_grace_time=None)
+    #sched.add_job(discover, 'cron', hour=10, minute=30, second=0, misfire_grace_time=None)
+    sched.add_job(job, 'cron', hour='0-23', minute=00, second=0, misfire_grace_time=None)
 
     logger.info('Start the Scheduling~')
     sched.start()
