@@ -11,7 +11,10 @@ from common.output.db import before as dash_setting_before
 from common.output.db import after as dash_setting_after
 from common.output.model import plug_in_purchase as purchase_db
 from common.output.model import plug_in_security as security_db
+from common.output.model import plug_in_online as online_db
 from common.core.Statistics import Minutely_statistics, Daily_statistics
+from common.input.online import plug_in as onlineinput
+
 # from common.core.Statistics import chassis_type as chassis_input
 # from common.core.Statistics import os_type as os_input
 # from common.core.Statistics import win_ver as win_ver_input
@@ -29,7 +32,10 @@ def minutely_plug_in():
         dash_setting_before()
         user_asset = userinput('common')
         user_input = user_db(user_asset)
+        online_asset  = onlineinput('online')
+        online_input  = online_db(online_asset)
         cache()
+
     # service_asset = userinput('service')
     # service_input = service_db(service_asset)
     #purchase_asset = userinput('purchase')
@@ -37,6 +43,7 @@ def minutely_plug_in():
     #security_asset = userinput('security')
     #security_input = security_db(security_asset)
     # # print(security_asset)
+
         Minutely_statistics()
         Daily_statistics()
         dash_setting_after()

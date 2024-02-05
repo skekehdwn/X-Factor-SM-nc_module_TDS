@@ -130,7 +130,7 @@ def plug_in_minutely(data):
                 'subnet' : d[22][0]['text'],
                 'essential1': d[23][0]['text'],
                 'essential2': new_user_date_index_now,
-                'essential3': d[25][0]['text'],
+                'essential3': 'False',
                 'essential4': d[26][0]['text'],
                 'essential5': d[27][0]['text'],
                 'mem_use': d[28][0]['text'],
@@ -577,6 +577,31 @@ def cache():
 #             except Exception as e:
 #                 #print(f"메일 발송 실패 : {e}")
 #                 logger.warning(f"메일 발송 실패 {to_email}: {e}")
+
+
+def plug_in_online(data):
+    try:
+        proc_data = PROC(data)
+        for d in proc_data:
+            computer_id = d[0][0]['text']
+            essential3 = 'True'
+            xfactor_common, created = Xfactor_Common.objects.update_or_create(
+                computer_id=computer_id,
+                defaults={'essential3': essential3}
+            )
+            if created:
+                pass
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        logger.warning('Online error' + str(e))
+        print(e)
+    return HttpResponse("Data saved successfully!")
+
+
+
+
+
 
 ###NC용 메일발송기능
 def plug_in_discover():

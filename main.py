@@ -75,8 +75,8 @@ def discover():
 
 def main():
     try :
-        job()
-        #CTMPI()
+        #job()
+        CTMPI()
         #CTDPI()
         #DCPI()
         # Kafka_Con()
@@ -118,7 +118,7 @@ def main():
     #sched.add_job(daily, 'cron', hour='0-23', minute='10',  second='20', misfire_grace_time=None)
     #sched.add_job(kafka, 'cron', hour='16', minute='30',  second='20' , misfire_grace_time=None)
     #sched.add_job(discover, 'cron', hour=10, minute=30, second=0, misfire_grace_time=None)
-    sched.add_job(job, 'cron', hour='0-23', minute=00, second=0, misfire_grace_time=None)
+    #sched.add_job(job, 'cron', hour='0-23', minute=00, second=0, misfire_grace_time=None)
 
     logger.info('Start the Scheduling~')
     sched.start()
