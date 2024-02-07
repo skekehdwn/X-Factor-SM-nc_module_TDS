@@ -76,7 +76,7 @@ def discover():
 def main():
     try :
         #job()
-        # CTMPI()
+        CTMPI()
         #CTDPI()
         #DCPI()
         # Kafka_Con()
