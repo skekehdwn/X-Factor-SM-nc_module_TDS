@@ -396,7 +396,7 @@ def Daily_statistics() :
         local_tz = pytz.timezone('Asia/Seoul')
         utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
         now = utc_now.astimezone(local_tz)
-        start_of_today = now.replace(minute=0, second=0, microsecond=0) - timedelta(minutes=20) # timedelta TDS용
+        start_of_today = now.replace(minute=0, second=0, microsecond=0)
         #print(start_of_today)
         seven_days_ago = start_of_today - timedelta(days=7)
         # end_of_today = start_of_today + timedelta(days=1)
@@ -405,7 +405,7 @@ def Daily_statistics() :
 
 
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
 
         users = user.values('chassistype').annotate(count=Count('chassistype'))
         for user_data in users:
@@ -421,7 +421,7 @@ def Daily_statistics() :
         print("os simple시작")
         #os_type OS종류
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.values('os_simple').annotate(count=Count('os_simple'))
         for user_data in users:
             classification = 'os_simple'  # 분류 정보를 원하시는 텍스트로 변경해주세요.
@@ -436,7 +436,7 @@ def Daily_statistics() :
 
         #win_ver 윈도우버전
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.filter(Q(os_simple='Windows')).values('os_total').annotate(count=Count('os_total'))
         for user_data in users:
             classification = 'win_os_total'  # 분류 정보를 원하시는 텍스트로 변경해주세요.
@@ -452,7 +452,7 @@ def Daily_statistics() :
         #subnet 대역별
 
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.values('subnet').annotate(count=Count('subnet'))
         inCount = 0
         outCount = 0
@@ -611,7 +611,7 @@ def Daily_statistics() :
         #Office 버전별 통계
 
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         service_user = user.values('essential5').annotate(count=Count('essential5'))
         for user_data in service_user:
             classification = None  # 초기값 설정
@@ -636,7 +636,7 @@ def Daily_statistics() :
         # cpu 사용량
 
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
 
         services = user.values('t_cpu').annotate(count=Count('t_cpu'))
         for service_data in services:
@@ -652,7 +652,7 @@ def Daily_statistics() :
         print("os 6개 시작")
         # os버전별 자산 현황
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.filter(Q(os_simple='Windows'), Q(os_total__contains='Windows')).values('os_total', 'os_build').annotate(count=Count('os_simple')).order_by('-count')[:6]
         for user_data in users:
             # if user_data['os_total'] == 'unconfirmed':
@@ -669,7 +669,7 @@ def Daily_statistics() :
         print("업데이트 핫픽스 시작")
         # 업데이트 필요 통계
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today).exclude(os_build__in=['' ,'unconfirmed'])
-        user = Xfactor_Common.objects.filter(essential3='True').exclude(os_build__in=['' ,'unconfirmed'])
+        user = Xfactor_Common.objects.filter(essential3=True).exclude(os_build__in=['' ,'unconfirmed'])
 
 
         ver_current = Daily_Statistics_log.objects.filter(item='ver_module').order_by('-statistics_collection_date').values_list('item_count', flat=True).first()
@@ -685,7 +685,7 @@ def Daily_statistics() :
         daily_statistics_log.save()
         # 업데이트 필요 통계
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today).exclude(os_build__in=['', 'unconfirmed'])
-        user = Xfactor_Common.objects.filter(essential3='True').exclude(os_build__in=['', 'unconfirmed'])
+        user = Xfactor_Common.objects.filter(essential3=True).exclude(os_build__in=['', 'unconfirmed'])
 
         #user = Xfactor_Daily.objects.filter(user_date__gte=time)
         #user = Xfactor_Common_Cache.objects.filter(cache_date__gte=time)
@@ -703,7 +703,7 @@ def Daily_statistics() :
         print("구분값  시작")
         # online window
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.filter(Q(chassistype='Notebook')).values('os_simple').annotate(count=Count('os_simple'))
         for user_data in users:
             classification = 'Notebook_chassis_online'  # 분류 정보를 원하시는 텍스트로 변경해주세요.
@@ -718,7 +718,7 @@ def Daily_statistics() :
 
         # online mac
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.filter(Q(chassistype='Desktop')).values('os_simple').annotate(count=Count('os_simple'))
         for user_data in users:
             classification = 'Desktop_chassis_online'  # 분류 정보를 원하시는 텍스트로 변경해주세요.
@@ -733,7 +733,7 @@ def Daily_statistics() :
 
         # online other
         #user = Xfactor_Common.objects.filter(user_date__gte=start_of_today)
-        user = Xfactor_Common.objects.filter(essential3='True')
+        user = Xfactor_Common.objects.filter(essential3=True)
         users = user.exclude(Q(chassistype='Desktop') | Q(chassistype='Notebook')).values('os_simple').annotate(count=Count('os_simple'))
         for user_data in users:
             classification = 'Other_chassis_online'  # 분류 정보를 원하시는 텍스트로 변경해주세요.
