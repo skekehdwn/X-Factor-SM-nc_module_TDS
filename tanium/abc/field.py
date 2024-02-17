@@ -32,5 +32,9 @@ class FieldABC(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def get_question_text(self) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
     def get_graphql_text(self) -> str:
         raise NotImplementedError

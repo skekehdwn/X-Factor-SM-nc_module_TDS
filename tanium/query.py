@@ -1,10 +1,10 @@
 from typing import Any, Generator, Type
 
-from tanium.objects import EndpointTDSObject, EndpointTSObject
+from tanium.objects import EndpointTDSObject, EndpointTSObject, TaniumRestObject
 from tanium.types import Meta
 
 __all__ = (
-    "LiveQuery",
+    "QuestionQuery",
     "CacheQuery",
 )
 
@@ -26,6 +26,8 @@ class CacheQuery(metaclass=QueryMeta):
         yield str(value)
 
 
-class LiveQuery(CacheQuery):
-    __objects_cls__: Type[EndpointTSObject] = EndpointTSObject
-    objects: EndpointTSObject
+class QuestionQuery(metaclass=QueryMeta):
+    _meta: Meta = Meta()
+
+    __objects_cls__: Type[TaniumRestObject] = TaniumRestObject
+    objects: TaniumRestObject

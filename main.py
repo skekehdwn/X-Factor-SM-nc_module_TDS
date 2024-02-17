@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import requests
+from requests import Session
 from common.core.Dashboard import daily_plug_in as CTDPI
 from common.core.Dashboard import minutely_plug_in as CTMPI
 from common.core.Dashboard import discover_plug_in as DCPI
@@ -72,6 +74,46 @@ def discover():
 #     except Exception as e:
 #         logger.warning('weekly Fail' + str(e))
 
+session_url = 'https://211.38.3.194:4082'
+session_id = 'administrator'
+session_pw = 'xion123!'
+
+
+def get_session_token(session: Session):
+    response = session.post(
+        f"{session_url}/api/v2/session/login",
+        data=json.dumps(
+            {
+                "username": session_id,
+                "password": session_pw,
+                "domain": "",
+            }
+        ),
+        verify=False,
+    )
+    return response.json()["data"]["session"]
+
+
+def get_online_count(session: Session, token: str):
+    url = f"{session_url}/plugin/products/core-data/v1/online_endpoints"
+
+    headers = {
+        "Session": token,
+        "Content-Type": "application/json",
+    }
+
+    response = session.get(url, headers=headers)
+
+    return response.text
+
+
+def check_online():
+    with requests.Session() as session:
+        session_token = get_session_token(session)
+        response_text = get_online_count(session, session_token)
+        with open("./online_count.json", "a+") as file:
+            file.write(f'{datetime.now()} {response_text}\n')
+
 
 def main():
     try :
@@ -114,11 +156,12 @@ def main():
 
     #test용
     # sched.add_job(minutely, 'cron', hour=CDTH, minute=CDTM, second='10', misfire_grace_time=None)  # seconds='3'
-    sched.add_job(minutely, 'cron', hour='0-23', minute='00', second='10', misfire_grace_time=None)  # seconds='3'
+    sched.add_job(minutely, 'cron', hour='0-23', minute='58', second='10', misfire_grace_time=None)  # seconds='3'
     #sched.add_job(daily, 'cron', hour='0-23', minute='10',  second='20', misfire_grace_time=None)
     #sched.add_job(kafka, 'cron', hour='16', minute='30',  second='20' , misfire_grace_time=None)
     #sched.add_job(discover, 'cron', hour=10, minute=30, second=0, misfire_grace_time=None)
     #sched.add_job(job, 'cron', hour='0-23', minute=00, second=0, misfire_grace_time=None)
+    sched.add_job(check_online, 'cron', hour='0-23', minute='0,10,20,30,40,50', second=0, misfire_grace_time=None)
 
     logger.info('Start the Scheduling~')
     sched.start()

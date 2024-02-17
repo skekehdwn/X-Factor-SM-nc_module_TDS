@@ -2,7 +2,7 @@ import requests
 import json
 import logging
 from common.input.Session import plug_in as session
-from tanium import NodeField, Meta, SensorField, SensorSchema, CacheQuery
+from tanium import NodeField, Meta, SensorField, SensorSchema, CacheQuery, QuestionQuery
 
 import time
 
@@ -228,6 +228,16 @@ class NCsmStagingQuery(CacheQuery):
             "last_registration_time",
             "computer_id_test",
             "last_seen",
+        ],
+    )
+
+
+class NCsmQuestionQuery(QuestionQuery):
+    computer_id = SensorField(sensor="Computer ID")
+
+    _meta = Meta(
+        fields=[
+            "computer_id",
         ],
     )
 

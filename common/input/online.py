@@ -2,6 +2,7 @@ import requests
 import json
 import logging
 from common.input.Session import plug_in as session
+from common.input.UserInput import NCsmQuestionQuery
 from tanium import NodeField, Meta, SensorField, SensorSchema, CacheQuery
 import time
 
@@ -38,21 +39,23 @@ def plug_in(type):
         if type == 'online':
             #CSID = '4383'
             CSID = SETTING['CORE']['Tanium']['INPUT']['API']['SensorID']['ONLINE']
-        CSH = {'session': SK}
-        CSU = APIURL + CSP + CSID
-        CSR = requests.post(CSU, headers=CSH, verify=False)
+        # CSH = {'session': SK}
+        # CSU = APIURL + CSP + CSID
+        # CSR = requests.post(CSU, headers=CSH, verify=False)
         # time.sleep(60)
-        CSRT = CSR.content.decode('utf-8', errors='ignore')
-        CSRJ = json.loads(CSRT)
+        # CSRT = CSR.content.decode('utf-8', errors='ignore')
+        # CSRJ = json.loads(CSRT)
         #CSRJD = NCsmOnlineQuery.objects.to_list_value()
         #print(NCsmOnlineQuery.objects.get_graphql_endpoints())
 
-
-        CSRJD = CSRJ['data']
+        print('------------------------------------------')
+        question_value = NCsmQuestionQuery.objects.to_response_json()
+        # print(AA['data']['result_sets'][0]['rows'])
+        # CSRJD = CSRJ['data']
         #print(CSRJD)
         dataList = []
-        DATA_list = CSRJD['result_sets'][0]['rows']
-
+        # DATA_list = CSRJD['result_sets'][0]['rows']
+        DATA_list = question_value['data']['result_sets'][0]['rows']
         for d in DATA_list:  # index 제거
             DL = []
             for i in d['data']:
@@ -60,7 +63,7 @@ def plug_in(type):
             dataList.append(DL)
         logger.info('Tanium API Sensor 호출 성공')
         logger.info('Sensor ID : ' + str(CSID))
-        #print(dataList)
+        print(len(dataList))
 
         return dataList
     except Exception as ex:

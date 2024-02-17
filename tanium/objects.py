@@ -7,7 +7,7 @@ import requests
 import urllib3
 from requests import Response, Session
 
-from tanium.abc.objects import TaniumObjectABC
+from tanium.abc.objects import TaniumObjectABC, TaniumQObjectABC
 from tanium.env import TANIUM_HOST, TANIUM_PASSWORD, TANIUM_USER
 from tanium.fields import Field, NodeField, SensorField
 from tanium.schema import NodeSchema, Schema, SensorSchema
@@ -20,6 +20,7 @@ T = TypeVar("T")
 __all__ = (
     "EndpointTDSObject",
     "EndpointTSObject",
+    "TaniumRestObject"
 )
 
 
@@ -374,6 +375,209 @@ class EndpointTDSObject(TaniumObjectABC, Generic[T]):
     def to_sql(self) -> Generator[str, Any, None]:
         for data in self.to_iter():
             yield self.object.to_sql(data)
+
+
+class TaniumObject(TaniumQObjectABC, Generic[T]):
+    def __init__(self, cls: Type[T]):
+        self.object: Type[T] = cls
+        self.object_meta: Meta = cls._meta
+        self.response: Response | None = None
+
+    def get_fields_name(self) -> Generator[str, Any, None]:
+        for field_name in self.object_meta.fields:
+            yield field_name
+
+    def get_fields(self) -> Generator[Field, Any, None]:
+        for field_name in self.get_fields_name():
+            field = getattr(self.object, field_name)
+            if isinstance(field, Field):
+                field.set_field_name(field_name)
+                yield field
+
+    def get_sensors_name(self) -> Generator[str, Any, None]:
+        for field in self.get_fields():
+            yield field.get_sensor_name()
+
+    def get_sensors_text(self) -> Generator[str, Any, None]:
+        for field in self.get_fields():
+            yield field.get_question_text()
+
+    def get_column_fields(self) -> Generator[Field, Any, None]:
+        for field in self.get_fields():
+            if isinstance(field, Schema):
+                yield from field.get_fields()
+                continue
+            yield field
+
+    def to_response_json(self, refresh: bool = False) -> Dict:
+        response = self.to_response(refresh=refresh)
+        return response.json()
+
+
+class TaniumRestObject(TaniumObject, Generic[T]):
+    def __init__(self, cls: Type[T]):
+        super().__init__(cls)
+
+    def get_question_text(self):
+        sensors = " and ".join(self.get_sensors_text())
+        return f"Get {sensors} from all machines"
+
+    def _create_question_id(self, session: Session) -> int:
+        response = session.post(
+            f"{TANIUM_HOST}/api/v2/questions",
+            data=json.dumps({"query_text": self.get_question_text()}),
+            headers = {
+                "session": self.token,
+                "Content-Type": "application/json",
+            },
+            verify=False,
+        )
+        question_id: int = response.json()["data"]["id"]
+        return question_id
+
+    def _get_question_result(self, session: Session, question_id: int):
+        response = session.post(
+            f"{TANIUM_HOST}/api/v2/result_data/question/{question_id}",
+            headers = {
+                "session": self.token,
+                "Content-Type": "application/json",
+            },
+            verify=False,
+        )
+        return response
+
+    def _find_saved_question(self, session: Session) -> int | None:
+        response = session.get(
+            (
+                f"{TANIUM_HOST}/api/v2/"
+                f"saved_questions/by-name/"
+                f"{self.object_meta.question_name}"
+            ),
+            verify=False,
+        )
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            return None
+        return response.json()["data"]["id"]
+
+    def _create_saved_question(
+        self,
+        session: Session,
+        question_id: int,
+    ) -> int:
+        response = session.post(
+            f"{TANIUM_HOST}/api/v2/saved_questions",
+            data=json.dumps(
+                {
+                    "name": self.object_meta.question_name,
+                    "question": {"id": question_id},
+                }
+            ),
+            verify=False,
+        )
+        return response.json()["data"]["id"]
+
+    def _get_saved_question_result(
+        self,
+        session: Session,
+        saved_question_id: int,
+    ) -> Response:
+        response = session.post(
+            (
+                f"{TANIUM_HOST}/api/v2/"
+                f"result_data/saved_question/{saved_question_id}"
+            ),
+            verify=False,
+        )
+        return response
+
+    def _get_question_response(self, session: Session) -> Response:
+        question_id = self._create_question_id(session)
+        time.sleep(100)
+        response = self._get_question_result(session, question_id)
+        return response
+
+    def to_response(self, refresh: bool = False) -> Response:
+        token = _get_login_token(requests)
+        self.token = token
+        question_id = self._create_question_id(requests)
+        time.sleep(5)
+        token = _get_login_token(requests)
+        self.token = token
+        response = self._get_question_result(requests, question_id)
+        return response
+
+    def to_iter(self, refresh: bool = False) -> Generator[T, Any, None]:
+        response_json = self.to_response_json(refresh=refresh)
+        result = response_json["data"]["result_sets"][0]
+        for row in result.get("rows", []):
+            value = {}
+            n = 0
+            for field in self.get_fields():
+                many = field.get_many()
+                data = row["data"]
+                if isinstance(field, Schema):
+                    if many:
+                        value[field.get_field_name()] = _schema_to_list(
+                            field,
+                            data,
+                            n,
+                        )
+                    else:
+                        value[field.get_field_name()] = _schema_to_dict(
+                            field,
+                            data,
+                            n,
+                        )
+                    n += len(list(field.get_fields()))
+                else:
+                    if many:
+                        value[field.get_field_name()] = _field_to_list(
+                            data,
+                            n,
+                        )
+                    else:
+                        value[field.get_field_name()] = data[n][0]["text"]
+                    n += 1
+            copy_object: CopyObject = CopyObject(**value)
+            yield copy_object
+
+    def to_list(self, refresh: bool = False) -> List[T]:
+        response_json = self.to_response_json(refresh=refresh)
+        result = response_json["data"]["result_sets"][0]
+        values = []
+        for row in result.get("rows", []):
+            value = {}
+            n = 0
+            for field in self.get_fields():
+                many = field.get_many()
+                data = row["data"]
+                if isinstance(field, Schema):
+                    if many:
+                        value[field.get_field_name()] = _schema_to_list(
+                            field,
+                            data,
+                            n,
+                        )
+                    else:
+                        value[field.get_field_name()] = _schema_to_dict(
+                            field,
+                            data,
+                            n,
+                        )
+                    n += len(list(field.get_fields()))
+                else:
+                    if many:
+                        value[field.get_field_name()] = _field_to_list(
+                            data,
+                            n,
+                        )
+                    else:
+                        value[field.get_field_name()] = data[n][0]["text"]
+                    n += 1
+            copy_object: CopyObject = CopyObject(**value)
+            values.append(copy_object)
+        return values
+
 
 
 class EndpointTSObject(EndpointTDSObject, Generic[T]):

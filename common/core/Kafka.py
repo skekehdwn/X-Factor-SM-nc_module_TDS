@@ -37,10 +37,10 @@ import psycopg2
 def save_to_postgresql(data):
     # PostgreSQL 연결 설정
     pg_config = {
-        'dbname': 'ncsm_dev',
+        'dbname': 'ncsm_op',
         'user': 'postgres',
         'password': 'psql',
-        'host': '172.20.161.129',
+        'host': '172.20.161.64',
         'port': '5432'
     }
     conn = psycopg2.connect(**pg_config)
@@ -111,10 +111,10 @@ def save_to_postgresql(data):
 
 def retire(messages):
     pg_config = {
-        'dbname': 'ncsm_dev',
+        'dbname': 'ncsm_op',
         'user': 'postgres',
         'password': 'psql',
-        'host': '172.20.161.129',
+        'host': '172.20.161.64',
         'port': '5432'
     }
     # pg_config = {

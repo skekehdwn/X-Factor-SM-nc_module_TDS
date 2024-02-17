@@ -65,6 +65,17 @@ class Field(FieldABC):
     def get_many(self) -> bool:
         return self.many
 
+    def get_question_text(self) -> str:
+        sensor_text = f"{self.sensor}"
+        if self.params is not None:
+            sensor_params_text = '","'.join(map(lambda x: x["value"], self.params))
+            sensor_text += f'["{sensor_params_text}"]'
+
+        if self.max_age_seconds is not None:
+            sensor_text += f"?maxAge={self.max_age_seconds}"
+
+        return sensor_text
+
     def get_graphql_text(self) -> str:
         return self.sensor
 

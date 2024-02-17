@@ -44,3 +44,41 @@ class TaniumObjectABC(ABC, Generic[T]):
     @abstractmethod
     def to_sql(self) -> str:
         raise NotImplementedError
+
+
+class TaniumQObjectABC(ABC, Generic[T]):
+    @abstractmethod
+    def get_fields_name(self) -> Generator[str, Any, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_fields(self) -> Generator[FieldABC, Any, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_sensors_name(self) -> Generator[str, Any, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_sensors_text(self) -> Generator[str, Any, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_column_fields(self) -> Generator[FieldABC, Any, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def to_response(self, refresh: bool = False) -> Response:
+        raise NotImplementedError
+
+    @abstractmethod
+    def to_response_json(self, refresh: bool = False) -> Dict | Sequence[Dict]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def to_iter(self) -> Generator[T, Any, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def to_list(self) -> List[T]:
+        raise NotImplementedError

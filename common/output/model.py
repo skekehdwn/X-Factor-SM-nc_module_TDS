@@ -17,6 +17,7 @@ from .preprocessing import plug_in as PROC
 import pytz
 from datetime import datetime, timedelta
 logger = logging.getLogger()
+
 def plug_in_minutely(data):
     a = 0
     try:
@@ -72,11 +73,9 @@ def plug_in_minutely(data):
             last_registration_time = d[-3][0]['text']
             if last_seen_data not in ['unconfirmed']:
                 new_user_date_str = last_seen_data
-            elif not last_registration_time not in ['[no results]', '', 'unconfirmed']:
+            elif last_registration_time not in ['[no results]', '', 'unconfirmed']:
                 new_user_date_str = last_registration_time + 'Z'
             else:
-                a += 1
-                print(a)
                 continue
             #print(a)
             # print(last_seen_data, last_registration_time)
@@ -583,14 +582,14 @@ def plug_in_online(data):
     try:
         Xfactor_Common.objects.update(essential3=False)
         proc_data = PROC(data)
+        computer_id_list = []
         for d in proc_data:
             computer_id = d[0][0]['text']
-            _, created = Xfactor_Common.objects.update_or_create(
-                computer_id=computer_id,
-                defaults={'essential3': True}
-            )
-            if created:
-                pass
+            computer_id_list.append(computer_id)
+        print(len(computer_id_list))
+        Xfactor_Common.objects.filter(computer_id__in=computer_id_list
+        ).update(essential3=True)
+
     except Exception as e:
         import traceback
         traceback.print_exc()
