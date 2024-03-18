@@ -14,6 +14,7 @@ from common.output.model import plug_in_security as security_db
 from common.output.model import plug_in_online as online_db
 from common.core.Statistics import Minutely_statistics, Daily_statistics
 from common.input.online import plug_in as onlineinput
+from common.output.model import plug_in_raw as raw_db
 
 # from common.core.Statistics import chassis_type as chassis_input
 # from common.core.Statistics import os_type as os_input
@@ -30,25 +31,24 @@ logger = logging.getLogger()
 def minutely_plug_in():
     try:
         dash_setting_before()
+        online_asset  = onlineinput('online')
         user_asset = userinput('common')
         user_input = user_db(user_asset)
-        online_asset  = onlineinput('online')
         online_input  = online_db(online_asset)
         cache()
-
-    # service_asset = userinput('service')
-    # service_input = service_db(service_asset)
-    #purchase_asset = userinput('purchase')
-    #purchase_input = purchase_db(purchase_asset)
-    #security_asset = userinput('security')
-    #security_input = security_db(security_asset)
-    # # print(security_asset)
-
         Minutely_statistics()
         Daily_statistics()
         dash_setting_after()
+
+        try:
+            row_input = raw_db(user_asset)
+        except Exception as e:
+            logger.warning('raw_db error' + str(e))
+
+
     except Exception as e:
         logger.warning('정시 인풋 error' + str(e))
+
 
 def daily_plug_in():
     user_asset = userinput('daily')

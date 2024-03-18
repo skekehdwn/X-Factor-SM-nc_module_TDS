@@ -159,10 +159,10 @@ class NCsmStagingExtFirPython(SensorSchema):
 
 
 class NCsmStagingQuery(CacheQuery):
-    computer_id = SensorField(sensor="Computer ID_python")
-    computer_name = SensorField(sensor="Computer Name_python")
+    computer_id = SensorField(sensor="Computer ID")
+    computer_name = SensorField(sensor="Computer Name")
     client_ip = SensorField(sensor="Tanium Client IP Address_python")
-    mac_address = SensorField(sensor="MAC Address_python")
+    mac_address = SensorField(sensor="MAC Address")
     chassi_type = SensorField(sensor="ncsm_chassi_type_python")
     os_platform = SensorField(sensor="OS Platform_python")
 

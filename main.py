@@ -74,12 +74,12 @@ def discover():
 #     except Exception as e:
 #         logger.warning('weekly Fail' + str(e))
 
-session_url = 'https://211.38.3.194:4082'
-session_id = 'administrator'
-session_pw = 'xion123!'
 
 
 def get_session_token(session: Session):
+    session_url = URL
+    session_id = TID
+    session_pw = TPW
     response = session.post(
         f"{session_url}/api/v2/session/login",
         data=json.dumps(
@@ -95,6 +95,7 @@ def get_session_token(session: Session):
 
 
 def get_online_count(session: Session, token: str):
+    session_url = URL
     url = f"{session_url}/plugin/products/core-data/v1/online_endpoints"
 
     headers = {
@@ -108,6 +109,7 @@ def get_online_count(session: Session, token: str):
 
 
 def check_online():
+
     with requests.Session() as session:
         session_token = get_session_token(session)
         response_text = get_online_count(session, session_token)
@@ -118,6 +120,7 @@ def check_online():
 def main():
     try :
         #job()
+        check_online()
         CTMPI()
         #CTDPI()
         #DCPI()
@@ -156,12 +159,12 @@ def main():
 
     #test용
     # sched.add_job(minutely, 'cron', hour=CDTH, minute=CDTM, second='10', misfire_grace_time=None)  # seconds='3'
-    sched.add_job(minutely, 'cron', hour='0-23', minute='58', second='10', misfire_grace_time=None)  # seconds='3'
+    sched.add_job(minutely, 'cron', hour='0-23', minute='27,57', second='10', misfire_grace_time=None)  # seconds='3'
     #sched.add_job(daily, 'cron', hour='0-23', minute='10',  second='20', misfire_grace_time=None)
     #sched.add_job(kafka, 'cron', hour='16', minute='30',  second='20' , misfire_grace_time=None)
     #sched.add_job(discover, 'cron', hour=10, minute=30, second=0, misfire_grace_time=None)
     #sched.add_job(job, 'cron', hour='0-23', minute=00, second=0, misfire_grace_time=None)
-    sched.add_job(check_online, 'cron', hour='0-23', minute='0,10,20,30,40,50', second=0, misfire_grace_time=None)
+    sched.add_job(check_online, 'cron', hour='0-23', minute='0', second=0, misfire_grace_time=None)
 
     logger.info('Start the Scheduling~')
     sched.start()
@@ -170,8 +173,10 @@ if __name__ == "__main__":
     with open("setting.json", encoding="UTF-8") as f:
         SETTING = json.loads(f.read())
     CUSTOMER = SETTING['PROJECT']['CUSTOMER']
-    
 
+    URL = SETTING['CORE']['Tanium']['INPUT']['API']['URL']
+    TID = SETTING['CORE']['Tanium']['INPUT']['API']['username']
+    TPW = SETTING['CORE']['Tanium']['INPUT']['API']['password']
     PTD = SETTING['PROJECT']['TEST']['DAILY'].lower()
     TU = SETTING['CORE']['Tanium']['COREUSE'].lower()
     CMU = SETTING['CORE']['Tanium']['CYCLE']['MINUTELY']['USE'].lower()

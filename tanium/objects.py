@@ -500,7 +500,7 @@ class TaniumRestObject(TaniumObject, Generic[T]):
         token = _get_login_token(requests)
         self.token = token
         question_id = self._create_question_id(requests)
-        time.sleep(5)
+        time.sleep(180)
         token = _get_login_token(requests)
         self.token = token
         response = self._get_question_result(requests, question_id)

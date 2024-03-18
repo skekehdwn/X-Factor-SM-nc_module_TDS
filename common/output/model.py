@@ -1,6 +1,7 @@
 import json
 import logging
 import smtplib
+import psycopg2
 from django.db import transaction
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -80,7 +81,9 @@ def plug_in_minutely(data):
             #print(a)
             # print(last_seen_data, last_registration_time)
             new_user_date = datetime.strptime(new_user_date_str, '%Y-%m-%dT%H:%M:%SZ')
-            new_user_date = new_user_date.astimezone(local_tz)
+            new_user_date = new_user_date.astimezone(local_tz) + timedelta(hours=9)
+            format_date = new_user_date.strftime("%Y-%m-%d %H:%M:%S")
+            #print(format_date)
             new_user_date_index_now = new_user_date.strftime('%Y-%m-%d-%H')
             #print(index_now)
             # for h in range(len(d[9])):
@@ -581,14 +584,30 @@ def cache():
 def plug_in_online(data):
     try:
         Xfactor_Common.objects.update(essential3=False)
-        proc_data = PROC(data)
+        #proc_data = PROC(data)
+        proc_data = data
         computer_id_list = []
         for d in proc_data:
             computer_id = d[0][0]['text']
-            computer_id_list.append(computer_id)
-        print(len(computer_id_list))
-        Xfactor_Common.objects.filter(computer_id__in=computer_id_list
-        ).update(essential3=True)
+            if computer_id == 'unconfirmed':
+                print("unconfirmed")
+                pass
+            elif computer_id == None:
+                print("None")
+                pass
+            elif computer_id == '':
+                print("whitespace")
+                pass
+            Xfactor_Common.objects.filter(computer_id=computer_id).update(essential3=True)
+
+    # 위에꺼안되면이걸로 변경할 것
+    # try:
+    #     Xfactor_Common.objects.update(essential3=False)
+    #     proc_data = PROC(data)
+    #     computer_id_list = []
+    #     for d in proc_data:
+    #         computer_id = d[0][0]['text']
+    #         Xfactor_Common.objects.filter(computer_id=computer_id).update(essential3=True)
 
     except Exception as e:
         import traceback
@@ -596,6 +615,7 @@ def plug_in_online(data):
         logger.warning('Online error' + str(e))
         print(e)
     return HttpResponse("Data saved successfully!")
+
 
 
 
@@ -696,3 +716,197 @@ def plug_in_discover():
             except Exception as e:
                 # print(f"메일 발송 실패 : {e}")
                 logger.warning(f"메일 발송 실패 {to_email}: {e}")
+
+
+def plug_in_raw(data):
+    a = 0
+    try:
+        with open("setting.json", encoding="UTF-8") as f:
+            SETTING = json.loads(f.read())
+        HOST = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['HOST']
+        USER = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['USER']
+        PWD = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['PWD']
+        DATABASE = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['NAME']
+
+        config = {
+            'host': HOST,
+            'user': USER,
+            'password': PWD,
+            'database': NAME
+        }
+        #print(data)
+        # Xfactor_Service.objects.all().delete()
+        # Xfactor_Purchase.objects.all().delete()
+        # Xfactor_Security.objects.all().delete()
+        # Xfactor_Common.objects.all().delete()
+        #proc_data = PROC(data)
+        for d in data:
+            #hw_list = []
+            sw_list = []
+            sw_ver_list = []
+            sw_ver_install_list = []
+            sw_ver_lastrun_list = []
+            hot_list = []
+            hotdate_list = []
+            chr_list = []
+            chr_ver_list = []
+            edg_list = []
+            edg_ver_list = []
+            fir_list = []
+            fir_ver_list = []
+
+            logged_name_id = d[49][0]['text'].replace('NC-KOREA\\','')
+            # try:
+            #     logged_name_id = Xfactor_ncdb.objects.get(userId=logged_name_id)
+            # except Exception as e:
+            #     custom_object = Xfactor_ncdb()
+            #     custom_object.userId = logged_name_id
+            #     custom_object.save()
+            #     logged_name_id = Xfactor_ncdb.objects.get(userId=logged_name_id)
+
+            # 현재 시간대 객체 생성, 예시: "Asia/Seoul"
+            local_tz = pytz.timezone('Asia/Seoul')
+            # UTC 시간대를 사용하여 현재 시간을 얻음
+            utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
+            # 현재 시간대로 시간 변환
+            now = utc_now.astimezone(local_tz)
+            index_now = now.strftime('%Y-%m-%d-%H')
+            computer_id = ''
+            tds_computer_id = d[0][0]['text']
+            node_computer_id = d[-2][0]['text']
+
+            #computer_id = node_computer_id
+
+            if tds_computer_id not in ['']:
+                computer_id = tds_computer_id
+            elif node_computer_id not in ['']:
+                computer_id = node_computer_id
+            else:
+                computer_id = 'Error'
+
+            new_user_date_str = ''
+            last_seen_data = d[-1][0]['text']
+            last_registration_time = d[-3][0]['text']
+            if last_seen_data not in ['', None]:
+                new_user_date_str = last_seen_data
+            elif last_registration_time not in ['[no results]', '', None]:
+                new_user_date_str = last_registration_time + 'Z'
+            else:
+                new_user_date_str = 'Error'
+            #print(a)
+            # print(last_seen_data, last_registration_time)
+            #new_user_date = datetime.strptime(new_user_date_str, '%Y-%m-%dT%H:%M:%SZ')
+            #new_user_date = new_user_date.astimezone(local_tz)
+            #new_user_date_index_now = new_user_date.strftime('%Y-%m-%d-%H')
+            #print(index_now)
+            # for h in range(len(d[9])):
+            #     hw_list.append(d[9][h]['text'])
+            for s in range(len(d[14])):
+                sw_list.append(d[14][s]['text'])
+                sw_ver_list.append(d[15][s]['text'])
+                sw_ver_install_list.append(d[16][s]['text'])
+                sw_ver_lastrun_list.append(d[17][s]['text'])
+            for i in range(len(d[20])):
+                hot_list.append(d[20][i]['text'])
+                hotdate_list.append(d[21][i]['text'])
+            for c in range(len(d[43])):
+                chr_list.append(d[43][c]['text'])
+                chr_ver_list.append(d[44][c]['text'])
+            for e in range(len(d[45])):
+                edg_list.append(d[45][e]['text'])
+                edg_ver_list.append(d[46][e]['text'])
+            for f in range(len(d[47])):
+                fir_list.append(d[47][f]['text'])
+                fir_ver_list.append(d[48][f]['text'])
+            # xfactor_user = Xfactor_Common()
+            # xfactor_user_log = Xfactor_Common_log()
+            defaults = {
+                'computer_id': computer_id,
+                'computer_name': d[1][0]['text'],
+                'ip_address': d[2][0]['text'],
+                'mac_address': d[3][0]['text'],
+                'chassistype': d[4][0]['text'],
+                'os_simple': d[5][0]['text'],
+                'os_total': d[6][0]['text'].replace('Microsoft ', ''),
+                'os_version': d[7][0]['text'],
+                'os_build': d[8][0]['text'],
+                'hw_cpu' : d[9][0]['text'],
+                'hw_ram' : d[10][0]['text'],
+                'hw_mb' : d[11][0]['text'],
+                'hw_disk' : d[12][0]['text'],
+                'hw_gpu' : d[13][0]['text'],
+                #'hw_list': str(hw_list).replace('"','').replace(",","<br>").replace('\'','').replace('[','').replace(']',''),
+                'sw_list': str(sw_list).replace('"','').replace('!','<br>').replace('\'','').replace('[','').replace(']','').replace(', ',''),
+                'sw_ver_list': str(sw_ver_list).replace("!","<br>").replace('\'','').replace('[','').replace(']','').replace(', ',''),
+                'sw_install' : str(sw_ver_install_list).replace("!","<br>").replace('\'','').replace('[','').replace(']','').replace(', ',''),
+                'sw_lastrun' : str(sw_ver_lastrun_list).replace("!","<br>").replace('\'','').replace('[','').replace(']','').replace(', ',''),
+                'first_network' : d[18][0]['text'],
+                'last_network' : d[19][0]['text'],
+                'hotfix': str(hot_list).replace("''", '').replace("' ", '').replace("'", '').replace(",", "<br>").replace('[', '').replace(']', ''),
+                'hotfix_date': str(hotdate_list).replace("''", '').replace("' ", '').replace("'", '').replace(",", "<br>").replace('[', '').replace(']', ''),
+                'subnet' : d[22][0]['text'],
+                'essential1': d[23][0]['text'],
+                'essential2': now,
+                'essential3': False,
+                'essential4': d[26][0]['text'],
+                'essential5': d[27][0]['text'],
+                'mem_use': d[28][0]['text'],
+                'disk_use': d[29][0]['text'],
+                't_cpu': d[30][0]['text'],
+                'security1': d[31][0]['text'],
+                'security1_ver': d[32][0]['text'],
+                'security2': d[33][0]['text'],
+                'security2_ver': d[34][0]['text'],
+                'security3': d[35][0]['text'],
+                'security3_ver': d[36][0]['text'],
+                'security4': d[37][0]['text'],
+                'security4_ver': d[38][0]['text'],
+                'security5': d[39][0]['text'],
+                'security5_ver': d[40][0]['text'],
+                'uuid': d[41][0]['text'],
+                'multi_boot': d[42][0]['text'],
+                'ext_chr': str(chr_list).replace("['', '", '').replace(", '', ", "<br>").replace("''", '').replace("' ", '').replace("'", '').replace(", ", "<br>").replace('[', '').replace(']', ''),
+                'ext_chr_ver': str(chr_ver_list).replace("['', '", '').replace(", '', ", "<br>").replace("''", '').replace("' ", '').replace("'", '').replace(", ", "<br>").replace('[', '').replace(']', ''),
+                'ext_edg': str(edg_list).replace("['', '", '').replace(", '', ", "<br>").replace("''", '').replace("' ", '').replace("'", '').replace(", ", "<br>").replace('[', '').replace(']', ''),
+                'ext_edg_ver': str(edg_ver_list).replace("['', '", '').replace(", '', ", "<br>").replace("''", '').replace("' ", '').replace("'", '').replace(", ", "<br>").replace('[', '').replace(']', ''),
+                'ext_fir': str(fir_list).replace("['', '", '').replace(", '', ", "<br>").replace("''", '').replace("' ", '').replace("'", '').replace(", ", "<br>").replace('[', '').replace(']', ''),
+                'ext_fir_ver': str(fir_ver_list).replace("['', '", '').replace(", '', ", "<br>").replace("''", '').replace("' ", '').replace("'", '').replace(", ", "<br>").replace('[', '').replace(']', ''),
+                'logged_name': logged_name_id,
+                'user_date': new_user_date_str,
+            }
+            #factor_common, created = Xfactor_Common.objects.update_or_create(computer_id=computer_id, defaults=defaults)
+            # xfactor_common.save()
+            conn = psycopg2.connect(**config)
+            cursor = conn.cursor()
+            sql = """
+                INSERT INTO common_xfactor_raw_common (
+                    computer_id, computer_name, ip_address, mac_address, chassistype, os_simple, os_total, os_version, os_build,
+                    hw_cpu, hw_ram, hw_mb, hw_disk, hw_gpu, sw_list, sw_ver_list, sw_install, sw_lastrun,
+                    first_network, last_network, hotfix, hotfix_date, subnet, essential1, essential2, essential3,
+                    essential4, essential5, mem_use, disk_use, t_cpu, security1, security1_ver, security2,
+                    security2_ver, security3, security3_ver, security4, security4_ver, security5, security5_ver,
+                    uuid, multi_boot, ext_chr, ext_chr_ver, ext_edg, ext_edg_ver, ext_fir, ext_fir_ver,
+                    logged_name, user_date
+                ) VALUES (
+                    %(computer_id)s ,%(computer_name)s, %(ip_address)s, %(mac_address)s, %(chassistype)s, %(os_simple)s, %(os_total)s,
+                    %(os_version)s, %(os_build)s, %(hw_cpu)s, %(hw_ram)s, %(hw_mb)s, %(hw_disk)s, %(hw_gpu)s,
+                    %(sw_list)s, %(sw_ver_list)s, %(sw_install)s, %(sw_lastrun)s, %(first_network)s, %(last_network)s,
+                    %(hotfix)s, %(hotfix_date)s, %(subnet)s, %(essential1)s, %(essential2)s, %(essential3)s,
+                    %(essential4)s, %(essential5)s, %(mem_use)s, %(disk_use)s, %(t_cpu)s, %(security1)s, %(security1_ver)s,
+                    %(security2)s, %(security2_ver)s, %(security3)s, %(security3_ver)s, %(security4)s, %(security4_ver)s,
+                    %(security5)s, %(security5_ver)s, %(uuid)s, %(multi_boot)s, %(ext_chr)s, %(ext_chr_ver)s, %(ext_edg)s,
+                    %(ext_edg_ver)s, %(ext_fir)s, %(ext_fir_ver)s, %(logged_name)s, %(user_date)s
+                )
+            """
+            cursor.execute(sql, defaults)
+            conn.commit()
+            #rows = cursor.fetchone()
+            #print("----------------------성공----")
+        return 1
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        logger.warning('로우데이터 error' + str(e))
+        print(e)
+    return HttpResponse("로우데이터 saved successfully!")
+

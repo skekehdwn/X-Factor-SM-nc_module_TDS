@@ -48,7 +48,7 @@ def plug_in(type):
         #CSRJD = NCsmOnlineQuery.objects.to_list_value()
         #print(NCsmOnlineQuery.objects.get_graphql_endpoints())
 
-        print('------------------------------------------')
+        print('Q대기중---------------------------------------')
         question_value = NCsmQuestionQuery.objects.to_response_json()
         # print(AA['data']['result_sets'][0]['rows'])
         # CSRJD = CSRJ['data']
@@ -56,13 +56,14 @@ def plug_in(type):
         dataList = []
         # DATA_list = CSRJD['result_sets'][0]['rows']
         DATA_list = question_value['data']['result_sets'][0]['rows']
+        print('Q가져옴---------------------------------------')
         for d in DATA_list:  # index 제거
             DL = []
             for i in d['data']:
                 DL.append(i)
             dataList.append(DL)
-        logger.info('Tanium API Sensor 호출 성공')
-        logger.info('Sensor ID : ' + str(CSID))
+        #logger.info('Tanium API Sensor 호출 성공')
+        #logger.info('Sensor ID : ' + str(CSID))
         print(len(dataList))
 
         return dataList
