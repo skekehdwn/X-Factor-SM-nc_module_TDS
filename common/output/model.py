@@ -732,7 +732,7 @@ def plug_in_raw(data):
             'host': HOST,
             'user': USER,
             'password': PWD,
-            'database': NAME
+            'database': DATABASE
         }
         #print(data)
         # Xfactor_Service.objects.all().delete()
