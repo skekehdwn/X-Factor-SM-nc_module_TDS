@@ -917,11 +917,11 @@ def Daily_statistics() :
         #user = Xfactor_Common_Cache.objects.filter(user_date__gte=start_of_today).filter(cache_date__gte=seven_days_ago)
         user = Xfactor_Common.objects.filter(user_date__gte=seven_days_ago)
         security_program = ['cososys', 'symantec', 'cbr', 'cbc', 'mcafee']
-        cososys_count = user.filter(security1='True ').count()
-        symantec_count = user.filter(security2='True ').count()
-        cbr_count = user.filter(security3='True ').count()
-        cbc_count = user.filter(security4='True ').count()
-        mcafee_count = user.filter(security5='True ').count()
+        cososys_count = user.filter(security1='True').count()
+        symantec_count = user.filter(security2='True').count()
+        cbr_count = user.filter(security3='True').count()
+        cbc_count = user.filter(security4='True').count()
+        mcafee_count = user.filter(security5='True').count()
         count_list = cososys_count, symantec_count, cbr_count, cbc_count, mcafee_count
         for i, count_data in enumerate(count_list):
             classification = 'security_count'  # 분류 정보를 원하시는 텍스트로 변경해주세요.

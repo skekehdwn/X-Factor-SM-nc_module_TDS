@@ -650,14 +650,16 @@ def plug_in_discover():
 
 
     # 예외처리 리스트 구하기
-    Conn = psycopg2.connect(
-        'host={0} port={1} dbname={2} user={3} password={4}'.format(DBHOST, DBPORT, DBNM, DBUNM, DBPWD))
-    Cur = Conn.cursor()
-    query = "SELECT email FROM common_exclude"
-    Cur.execute(query)
-    exclude_email = Cur.fetchall()
-    print(exclude_email)
-
+    try:
+        Conn = psycopg2.connect(
+            'host={0} port={1} dbname={2} user={3} password={4}'.format(DBHOST, DBPORT, DBNM, DBUNM, DBPWD))
+        Cur = Conn.cursor()
+        query = "SELECT email FROM common_exclude"
+        Cur.execute(query)
+        exclude_email = Cur.fetchall()
+        print(exclude_email)
+    except Exception as e :
+        pass
 
     discover_asset = Xfactor_Common.objects.filter(
         Q(user_date__gte=today_180_ago) & Q(user_date__lte=today_150_ago)
