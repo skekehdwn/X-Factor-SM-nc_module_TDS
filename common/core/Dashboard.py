@@ -40,10 +40,10 @@ def minutely_plug_in():
         Daily_statistics()
         dash_setting_after()
 
-        try:
-            row_input = raw_db(user_asset)
-        except Exception as e:
-            logger.warning('raw_db error' + str(e))
+        # try:
+        #     row_input = raw_db(user_asset)
+        # except Exception as e:
+        #     logger.warning('raw_db error' + str(e))
 
 
     except Exception as e:

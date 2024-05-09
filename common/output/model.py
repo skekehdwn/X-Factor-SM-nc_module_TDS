@@ -81,7 +81,7 @@ def plug_in_minutely(data):
             #print(a)
             # print(last_seen_data, last_registration_time)
             new_user_date = datetime.strptime(new_user_date_str, '%Y-%m-%dT%H:%M:%SZ')
-            new_user_date = new_user_date.astimezone(local_tz) + timedelta(hours=9)
+            new_user_date = new_user_date.astimezone(local_tz)
             format_date = new_user_date.strftime("%Y-%m-%d %H:%M:%S")
             #print(format_date)
             new_user_date_index_now = new_user_date.strftime('%Y-%m-%d-%H')
@@ -628,6 +628,11 @@ def plug_in_discover():
         SETTING = json.loads(f.read())
     Mail_Id = SETTING['PROJECT']['MAIL']['ID']
     Mail_Pw = SETTING['PROJECT']['MAIL']['PW']
+    DBHOST = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['HOST']
+    DBPORT = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['PORT']
+    DBNM = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['NAME']
+    DBUNM = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['USER']
+    DBPWD = SETTING['CORE']['Tanium']['OUTPUT']['DB']['PS']['PWD']
 
     local_tz = pytz.timezone('Asia/Seoul')
     today = timezone.now().astimezone(local_tz)
@@ -641,6 +646,18 @@ def plug_in_discover():
 
     # 전체 mac_address 구하기
     all_mac_addresses = set(Xfactor_Common.objects.filter(user_date__gte=today_150_ago).values_list('mac_address', flat=True))
+    print(all_mac_addresses)
+
+
+    # 예외처리 리스트 구하기
+    Conn = psycopg2.connect(
+        'host={0} port={1} dbname={2} user={3} password={4}'.format(DBHOST, DBPORT, DBNM, DBUNM, DBPWD))
+    Cur = Conn.cursor()
+    query = "SELECT email FROM common_exclude"
+    Cur.execute(query)
+    exclude_email = Cur.fetchall()
+    print(exclude_email)
+
 
     discover_asset = Xfactor_Common.objects.filter(
         Q(user_date__gte=today_180_ago) & Q(user_date__lte=today_150_ago)
@@ -712,6 +729,7 @@ def plug_in_discover():
                 server.sendmail(msg['From'], to_email, msg.as_string())
                 server.quit()
                 print(f"메일이 성공적으로 발송되었습니다: {to_email}")
+                logger.warning(f"메일이 성공적으로 발송되었습니다: {to_email},  마지막 접속일: {d.user_date}, 보낸 날짜: {today}")
 
             except Exception as e:
                 # print(f"메일 발송 실패 : {e}")
@@ -732,7 +750,7 @@ def plug_in_raw(data):
             'host': HOST,
             'user': USER,
             'password': PWD,
-            'database': NAME
+            'database': DATABASE
         }
         #print(data)
         # Xfactor_Service.objects.all().delete()
